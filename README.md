@@ -1,24 +1,40 @@
-# hackerai-public
+# HackerAI Public
 
-Fork of [hackerai](https://github.com/hackerai-tech/hackerai) with custom authentication (LM Studio/OpenRouter/E2B/SSH) and uncensored mode.
+**Uncensored, open-source AI agent with custom authentication.**
 
 ## Features
-- Supports LM Studio, OpenRouter, and E2B API keys, or SSH for local inference.
-- Removes content restrictions and censorship.
-- Preserves the original agent mode.
+- **No bullshit**: Only requires LM Studio, OpenRouter, E2B, or SSH.
+- **Uncensored**: No content restrictions.
+- **Agent mode**: Full functionality preserved.
 
 ## Setup
-1. Clone this repository.
-2. Install dependencies: `npm install`
-3. Configure your API keys in `.env` or via the UI.
-4. Run the application.
+1. Clone this repo:
+   ```bash
+   git clone https://github.com/hezxss1/hackerai-public.git
+   cd hackerai-public
+   npm install
+   ```
+2. Open `public/api-key-ui.html` in your browser.
+3. Select your provider and enter your API key or SSH details.
+4. Click **Save & Start HackerAI**.
 
-## Authentication
-- Set `LM_STUDIO_API_KEY`, `OPENROUTER_API_KEY`, or `E2B_API_KEY` in `.env`.
-- For local inference, configure SSH access in the settings.
+## Providers
+| Provider      | Key Format          | Notes                          |
+|---------------|---------------------|--------------------------------|
+| LM Studio     | Any long string     | Local inference                |
+| OpenRouter    | `sk-or-...`         | Select a model in the UI      |
+| E2B           | `e2b-...`           | Cloud inference                |
+| SSH           | N/A                  | Local inference via SSH        |
+
+## Running
+- After saving your config, run:
+  ```bash
+  npm start
+  ```
+- Open `http://localhost:3000` in your browser.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first.
+Pull requests welcome. For major changes, open an issue first.
 
 ## License
 MIT

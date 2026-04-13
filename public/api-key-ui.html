@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HackerAI - API Key Setup</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      text-align: center;
+      color: #ff5555;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background-color: #2d2d2d;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #ff5555;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #ff3333;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .openrouter-model-selector, .local-inference-config {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #252526;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>HackerAI</h1>
+      <p>Select your AI provider and enter your API key.</p>
+    </div>
+    
+    <div class="form-group">
+      <label for="provider">AI Provider</label>
+      <select id="provider" onchange="toggleProviderFields()">
+        <option value="">-- Select Provider --</option>
+        <option value="lm-studio">LM Studio (Local)</option>
+        <option value="openrouter">OpenRouter</option>
+        <option value="e2b">E2B</option>
+        <option value="ssh">SSH (Local Inference)</option>
+      </select>
+    </div>
+    
+    <div class="form-group" id="apiKeyGroup">
+      <label for="apiKey">API Key</label>
+      <input type="password" id="apiKey" placeholder="Paste your API key here">
+    </div>
+    
+    <div class="form-group openrouter-model-selector" id="openrouterModelGroup">
+      <label for="openrouterModel">OpenRouter Model</label>
+      <select id="openrouterModel">
+        <option value="mistralai/mistral-7b-instruct">Mistral 7B Instruct</option>
+        <option value="meta-llama/llama-3-70b-instruct">Llama 3 70B Instruct</option>
+        <option value="anthropic/claude-3-opus">Claude 3 Opus</option>
+        <option value="google/gemma-7b-it">Gemma 7B IT</option>
+      </select>
+    </div>
+    
+    <div class="form-group local-inference-config" id="sshConfigGroup">
+      <label for="sshHost">SSH Host</label>
+      <input type="text" id="sshHost" placeholder="localhost or IP address">
+      <label for="sshPort" style="margin-top: 10px;">SSH Port</label>
+      <input type="text" id="sshPort" placeholder="22" value="22">
+      <label for="sshUser" style="margin-top: 10px;">SSH User</label>
+      <input type="text" id="sshUser" placeholder="username">
+      <label for="sshKey" style="margin-top: 10px;">SSH Private Key (Optional)</label>
+      <textarea id="sshKey" rows="4" placeholder="Paste your private key here (leave empty for password auth)"></textarea>
+    </div>
+    
+    <button onclick="saveConfig()">Save & Start HackerAI</button>
+  </div>
+  
+  <script>
+    function toggleProviderFields() {
+      const provider = document.getElementById('provider').value;
+      const apiKeyGroup = document.getElementById('apiKeyGroup');
+      const openrouterModelGroup = document.getElementById('openrouterModelGroup');
+      const sshConfigGroup = document.getElementById('sshConfigGroup');
+      
+      apiKeyGroup.style.display = 'block';
+      openrouterModelGroup.style.display = 'none';
+      sshConfigGroup.style.display = 'none';
+      
+      if (provider === 'openrouter') {
+        openrouterModelGroup.style.display = 'block';
+      } else if (provider === 'ssh') {
+        sshConfigGroup.style.display = 'block';
+        apiKeyGroup.style.display = 'none';
+      }
+    }
+    
+    function saveConfig() {
+      const provider = document.getElementById('provider').value;
+      const apiKey = document.getElementById('apiKey').value;
+      const openrouterModel = document.getElementById('openrouterModel').value;
+      const sshHost = document.getElementById('sshHost').value;
+      const sshPort = document.getElementById('sshPort').value;
+      const sshUser = document.getElementById('sshUser').value;
+      const sshKey = document.getElementById('sshKey').value;
+      
+      if (!provider) {
+        alert('Please select a provider');
+        return;
+      }
+      
+      if (provider !== 'ssh' && !apiKey) {
+        alert('Please enter your API key');
+        return;
+      }
+      
+      if (provider === 'ssh' && (!sshHost || !sshUser)) {
+        alert('Please enter SSH host and user');
+        return;
+      }
+      
+      const config = {
+        provider,
+        apiKey: provider === 'ssh' ? null : apiKey,
+        openrouterModel: provider === 'openrouter' ? openrouterModel : null,
+        sshConfig: provider === 'ssh' ? { host: sshHost, port: sshPort, user: sshUser, key: sshKey } : null
+      };
+      
+      localStorage.setItem('hackeraiConfig', JSON.stringify(config));
+      alert('Configuration saved! You can now start HackerAI.');
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>
