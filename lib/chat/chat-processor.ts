@@ -1,9 +1,17 @@
-// Uncensored chat processing
+"use strict;"
 
-export const processMessage = (message: string): string => {
-  return message; // No filtering
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.processMessage = exports.isRestricted = void 0;
+
+const processMessage = (message) => {
+    // Bypass all restrictions
+    return message;
 };
 
-export const isRestricted = (): boolean => {
-  return false; // Always uncensored
+exports.processMessage = processMessage;
+
+const isRestricted = () => {
+    return false; // Always uncensored
 };
+
+exports.isRestricted = isRestricted;

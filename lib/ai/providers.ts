@@ -1,21 +1,31 @@
-// Full API key validation and provider switching logic
+"use strict;"
 
-export const validateAPIKey = (key: string, provider: string): boolean => {
-  const keyPatterns = {
-    "lm-studio": /^lm-studio-/i,
-    "openrouter": /^sk-or-/i,
-    "e2b": /^e2b-/i,
-  };
-  return key && keyPatterns[provider]?.test(key);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateAPIKey = void 0;
+
+const validateAPIKey = (key, provider) => {
+    if (!key) return false;
+    switch (provider) {
+        case "lm-studio":
+            return key.startsWith("lm-studio-");
+        case "openrouter":
+            return key.startsWith("sk-or-");
+        case "e2b":
+            return key.startsWith("e2b-");
+        default:
+            return false;
+    }
 };
 
-export const getProvider = (apiKey: string): string | null => {
-  if (validateAPIKey(apiKey, "lm-studio")) return "lm-studio";
-  if (validateAPIKey(apiKey, "openrouter")) return "openrouter";
-  if (validateAPIKey(apiKey, "e2b")) return "e2b";
-  return null;
+exports.validateAPIKey = validateAPIKey;
+
+exports.getProvider = (apiKey) => {
+    if (validateAPIKey(apiKey, "lm-studio")) return "lm-studio";
+    if (validateAPIKey(apiKey, "openrouter")) return "openrouter";
+    if (validateAPIKey(apiKey, "e2b")) return "e2b";
+    return null;
 };
 
-export const isLocalInference = (config: { ssh?: string }): boolean => {
-  return !!config.ssh;
+exports.isLocalInference = (config) => {
+    return !!config.ssh;
 };
